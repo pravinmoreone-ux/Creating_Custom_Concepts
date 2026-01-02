@@ -1,0 +1,36 @@
+Invalid vs False
+For a type to satisfy a concept, the statements within the requires expression must be valid for that type. That does not mean the expression needs to evaluate to true.
+
+In the following example, we're trying to write a requirement where a type must be integral. This concept will always be satisfied because, for any type, std::integral<T> will be valid. It will not be a substitution failure - it will simply either be true or false:
+
+#include <concepts>
+#include <iostream>
+
+template <typename T>
+concept Integer = requires {
+  std::integral<T>;
+};
+
+int main() {
+  if (Integer<std::string>) {
+    std::cout << "The concept is satisfied";
+  }
+}
+The concept is satisfied
+To assert that an expression must not only be valid but also true, we should add the requires keyword before it:
+
+#include <concepts>
+#include <iostream>
+
+template <typename T>
+concept Integer = requires {
+  requires std::integral<T>;
+};
+
+int main() {
+  if (!Integer<std::string>) {
+    std::cout << "The concept is not satisfied";
+  }
+}
+The concept is not satisfied
+This distinction will make more sense as we see more examples later in the lesson.
